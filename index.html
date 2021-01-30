@@ -33,11 +33,11 @@
             <h1>Cruise Queen</h1>
             <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
                 industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
-                scrambled it to make a type specimen book./p>
+                scrambled it to make a type specimen book.
         </div>
 
 
-        <div class="booking-form">
+        <div id="booking-form">
             <h3>Book Ocean Time</h3>
             <div class="input-group">
                 <label for="">Flying From</label>
@@ -60,23 +60,22 @@
             <div class="input-group f-class">
                 <div>
                     <label for="">First Class ($150)</label>
-                    <input id="first-class-count" class="inp-style inp-width input-value" type="number" name=""
-                        value="0">
+                    <input id="first-class-count" class="inp-style inp-width input-value" name="" value="1">
                 </div>
                 <div class="plus-minus-btn">
-                    <button id="first-class-decrease" class="change-value-btn">-</button>
-                    <button id="first-class-increase" class="change-value-btn">+</button>
+                    <button onclick="handleTicketChange('first-class', false)" class="change-value-btn">-</button>
+                    <button onclick="handleTicketChange('first-class', true)" class="change-value-btn">+</button>
                 </div>
             </div>
 
             <div class="input-group f-class">
                 <div>
                     <label for="">Economy ($100)</label>
-                    <input id="economy-count" class="inp-style inp-width input-value" type="number" name="" value="0">
+                    <input id="economy-count" class="inp-style inp-width input-value" name="" value="1">
                 </div>
                 <div class="plus-minus-btn">
-                    <button id="economy-decrease" class="change-value-btn">-</button>
-                    <button id="economy-increase" class="change-value-btn">+</button>
+                    <button onclick="handleTicketChange('economy', false)" class="change-value-btn">-</button>
+                    <button onclick="handleTicketChange('economy', true)" class="change-value-btn">+</button>
                 </div>
             </div>
             <div class="calculations">
@@ -85,7 +84,7 @@
                         <p>Subtotal</p>
                     </div>
                     <div class="right">
-                        <p id="subtotal-amount">$0</p>
+                        <p id="subtotal-amount">$250</p>
                     </div>
                 </div>
 
@@ -94,7 +93,7 @@
                         <p>Charge 10% VAT</p>
                     </div>
                     <div class="right">
-                        <p id="vat-amount">$0</p>
+                        <p id="vat-amount">$25</p>
                     </div>
                 </div>
                 <hr>
@@ -103,7 +102,7 @@
                         <h4>Total</h4>
                     </div>
                     <div class="right">
-                        <p id="total-amount">$0</p>
+                        <p id="total-amount">$275</p>
                     </div>
                 </div>
             </div>
@@ -111,13 +110,12 @@
         </div>
 
         <div id="confirmation-area">
-            <div id="cross-sign"> X </div>
             <h2>Thanks for purchasing tickets!</h2>
             <div class="billing-area">
-                <h3><span id="first-class-ticket">0</span> first class and <span id="economy-ticket">0</span> economy
+                <h3><span id="first-class-ticket"> 1 </span> first class and <span id="economy-ticket"> 1 </span> economy
                     tickets
                 </h3>
-                <h3>Total bill is <span id="total-bill">$0</span></h3>
+                <h3>Total bill is <span id="total-bill">$275</span></h3>
             </div>
             <h3>Check your email for billing information.</h4>
         </div>
@@ -125,44 +123,13 @@
 
     <script>
 
-        document.getElementById('first-class-increase').addEventListener('click', function () {
-            handleTicketChange('first-class', true);
+        const bookNowBtn = document.getElementById('book-now');
+        bookNowBtn.addEventListener("click", function () {
+            const BookingArea = document.getElementById('booking-form');
+            BookingArea.style.visibility = "hidden" ;
+            const confirmationArea = document.getElementById("confirmation-area");
+            confirmationArea.style.display = "block" ;
         })
-
-        document.getElementById('first-class-decrease').addEventListener('click', function () {
-            handleTicketChange('first-class', false);
-        })
-
-        document.getElementById('economy-increase').addEventListener('click', function () {
-            handleTicketChange('economy', true);
-        })
-
-        document.getElementById('economy-decrease').addEventListener('click', function () {
-            handleTicketChange('economy', false);
-        })
-
-        document.getElementById('book-now').addEventListener('click', function () {
-            document.getElementById('confirmation-area').style.display = 'flex';
-        })
-
-        document.getElementById('cross-sign').addEventListener('click', function () {
-            document.getElementById('confirmation-area').style.display = 'none';
-
-
-            document.getElementById('first-class-count').value = 0;
-            document.getElementById('economy-count').value = 0;
-            document.getElementById('subtotal-amount').innerText = '$' + 0;
-            document.getElementById('vat-amount').innerText = '$' + 0;
-            document.getElementById('total-amount').innerText = '$' + 0;
-
-
-            document.getElementById('first-class-ticket').innerText = 0;
-            document.getElementById('economy-ticket').innerText = 0;
-            document.getElementById('total-bill').innerText = '$' + 0;
-
-        })
-
-        // function for managing the whole system
 
         function handleTicketChange(ticket, isIncrease) {
             const ticketCount = getInputValue(ticket);
@@ -177,40 +144,32 @@
             calculateTotal();
         }
 
-        // calculation of ticket prices
         function calculateTotal() {
             const firstClassCount = getInputValue('first-class');
             const economyCount = getInputValue('economy');
 
-            // sending ticket amount to confirmation area
             document.getElementById('first-class-ticket').innerText = firstClassCount;
             document.getElementById('economy-ticket').innerText = economyCount;
 
-            // Calculate subtotal
             const subTotal = firstClassCount * 150 + economyCount * 100;
             document.getElementById('subtotal-amount').innerText = '$' + subTotal;
 
-            // Calculate VAT
             const vat = Math.round(subTotal * .1);
             document.getElementById('vat-amount').innerText = '$' + vat;
 
-            //Calculate Total
             const Total = subTotal + vat;
             document.getElementById('total-amount').innerText = '$' + Total;
             document.getElementById('total-bill').innerText = '$' + Total;
         }
 
-        // calculate ticket amount
         function getInputValue(ticket) {
             const ticketInput = document.getElementById(ticket + '-count');
             const ticketCount = parseInt(ticketInput.value);
             return ticketCount;
         }
+
     </script>
 
-    <footer>
-        @ Cruise Queen LTD. All Right Reserved.
-    </footer>
 </body>
 
 </html>
